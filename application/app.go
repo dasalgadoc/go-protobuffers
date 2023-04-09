@@ -16,8 +16,9 @@ type (
 	}
 
 	applicationRepositories struct {
-		studentRepository domain.StudentRepository
-		testRepository    domain.TestRepository
+		studentRepository  domain.StudentRepository
+		testRepository     domain.TestRepository
+		questionRepository domain.QuestionRepository
 	}
 )
 
@@ -37,7 +38,7 @@ func BuildApplication() *Application {
 	return &Application{
 		Configuration: appConfig,
 		StudentServer: NewStudentServer(repositories.studentRepository),
-		TestServer:    NewTestServer(repositories.testRepository),
+		TestServer:    NewTestServer(repositories.testRepository, repositories.questionRepository),
 	}
 }
 
@@ -68,8 +69,14 @@ func buildRepositories(config domain.Config) (applicationRepositories, error) {
 		return applicationRepositories{}, err
 	}
 
+	questionRepo, err := repository.NewPostgresQuestionRepository(config.Database)
+	if err != nil {
+		return applicationRepositories{}, err
+	}
+
 	return applicationRepositories{
-		studentRepository: studentRepo,
-		testRepository:    testRepo,
+		studentRepository:  studentRepo,
+		testRepository:     testRepo,
+		questionRepository: questionRepo,
 	}, nil
 }
