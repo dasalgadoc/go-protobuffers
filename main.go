@@ -3,6 +3,7 @@ package main
 import (
 	"dasalgadoc.com/go-gprc/application"
 	"dasalgadoc.com/go-gprc/studentpb"
+	"dasalgadoc.com/go-gprc/testpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -16,8 +17,11 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	log.Println("Initializing server...")
+
 	s := grpc.NewServer()
-	studentpb.RegisterStudentServiceServer(s, app.Server)
+	studentpb.RegisterStudentServiceServer(s, app.StudentServer)
+	testpb.RegisterTestServiceServer(s, app.TestServer)
 
 	// to metadata to facilitate consume
 	reflection.Register(s)

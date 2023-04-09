@@ -11,11 +11,13 @@ import (
 type (
 	Application struct {
 		Configuration domain.Config
-		Server        *Server
+		StudentServer *StudentServer
+		TestServer    *TestServer
 	}
 
 	applicationRepositories struct {
 		studentRepository domain.StudentRepository
+		testRepository    domain.TestRepository
 	}
 )
 
@@ -26,11 +28,16 @@ func BuildApplication() *Application {
 		panic(err)
 	}
 
-	repositories := buildRepositories(appConfig)
+	repositories, err := buildRepositories(appConfig)
+	if err != nil {
+		log.Fatalln("error building repos: ", err)
+		panic(err)
+	}
 
 	return &Application{
 		Configuration: appConfig,
-		Server:        NewServer(repositories.studentRepository),
+		StudentServer: NewStudentServer(repositories.studentRepository),
+		TestServer:    NewTestServer(repositories.testRepository),
 	}
 }
 
@@ -50,22 +57,19 @@ func getConfiguration() (domain.Config, error) {
 	return config, nil
 }
 
-func buildRepositories(config domain.Config) applicationRepositories {
-	studentRepo, err := buildStudentRepository(config)
+func buildRepositories(config domain.Config) (applicationRepositories, error) {
+	studentRepo, err := repository.NewPostgresStudentRepository(config.Database)
 	if err != nil {
-		log.Fatalln("error building repo : ", err)
-		panic(err)
+		return applicationRepositories{}, err
+	}
+
+	testRepo, err := repository.NewPostgresTestRepository(config.Database)
+	if err != nil {
+		return applicationRepositories{}, err
 	}
 
 	return applicationRepositories{
 		studentRepository: studentRepo,
-	}
-}
-
-func buildStudentRepository(config domain.Config) (domain.StudentRepository, error) {
-	repo, err := repository.NewPostgresStudentRepository(config.Database)
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-	return repo, err
+		testRepository:    testRepo,
+	}, nil
 }

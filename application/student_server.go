@@ -6,18 +6,18 @@ import (
 	"dasalgadoc.com/go-gprc/studentpb"
 )
 
-type Server struct {
+type StudentServer struct {
 	repo domain.StudentRepository
 	studentpb.UnimplementedStudentServiceServer
 }
 
-func NewServer(repo domain.StudentRepository) *Server {
-	return &Server{
+func NewStudentServer(repo domain.StudentRepository) *StudentServer {
+	return &StudentServer{
 		repo: repo,
 	}
 }
 
-func (s *Server) GetStudent(ctx context.Context, req *studentpb.GetStudentRequest) (*studentpb.Student, error) {
+func (s *StudentServer) GetStudent(ctx context.Context, req *studentpb.GetStudentRequest) (*studentpb.Student, error) {
 	student, err := s.repo.GetStudent(ctx, req.GetId())
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (s *Server) GetStudent(ctx context.Context, req *studentpb.GetStudentReques
 	}, nil
 }
 
-func (s *Server) SetStudent(ctx context.Context, req *studentpb.Student) (*studentpb.SetStudentResponse, error) {
+func (s *StudentServer) SetStudent(ctx context.Context, req *studentpb.Student) (*studentpb.SetStudentResponse, error) {
 	student := &domain.Student{
 		Id:   req.GetId(),
 		Name: req.GetName(),

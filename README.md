@@ -15,10 +15,11 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
     - [gRPC](https://grpc.io/docs/languages/go/basics/)
 4. Compile the .proto file using protoc to generate the Go source code
 ```bash
-protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative studentpb/<FILE>.studentpb
+protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative <FOLDER>/<FILE>.proto
 ```
 5. The Source code generated required this dependency in the project
 ```bash
 go get google.golang.org/protobuf
 go get google.golang.org/grpc
 ```
+6. After this you can use the Services and Structs in your source code.
