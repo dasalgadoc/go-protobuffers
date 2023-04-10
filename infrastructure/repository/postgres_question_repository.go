@@ -4,6 +4,7 @@ import (
 	"context"
 	"dasalgadoc.com/go-gprc/domain"
 	"database/sql"
+	"log"
 )
 
 type PostgresQuestionRepository struct {
@@ -24,4 +25,29 @@ func (p *PostgresQuestionRepository) SetQuestion(ctx context.Context, question *
 		question.Id, question.TestId, question.Question, question.Answer)
 
 	return err
+}
+
+func (p *PostgresQuestionRepository) GetQuestionPerText(ctx context.Context, testId string) ([]*domain.Question, error) {
+	rows, err := p.db.QueryContext(ctx,
+		"SELECT id, question FROM questions WHERE test_id = $1", testId)
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}()
+	if err != nil {
+		return nil, err
+	}
+	var questions []*domain.Question
+	for rows.Next() {
+		var question = domain.Question{}
+		if err = rows.Scan(&question.Id, &question.Question); err == nil {
+			questions = append(questions, &question)
+		}
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return questions, nil
 }

@@ -43,11 +43,19 @@ message SetTestResponse {
   string name = 2;
 }
 
+/*-- TakeTest ---*/
+message TakeTestRequest {
+  string answer = 1;
+}
+
 service TestService {
   rpc GetTest(GetTestRequest) returns (Test);
   rpc SetTest(Test) returns (SetTestResponse);
   // Server receives a stream
   rpc SetQuestions(stream Question) returns (SetQuestionResponse);
   rpc EnrollStudents(stream EnrollmentRequest) returns (SetQuestionResponse);
+  // Server outputs a stream
   rpc GetStudentsPerTest(GetStudentsPerTestRequest) returns (stream student.Student);
+  // Both
+  rpc TakeTest(stream TakeTestRequest) returns (stream Question);
 }
