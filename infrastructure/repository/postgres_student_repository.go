@@ -50,3 +50,37 @@ func (p *PostgresStudentRepository) SetStudent(ctx context.Context, student *dom
 
 	return err
 }
+
+func (p *PostgresStudentRepository) SetEnrollment(ctx context.Context, enrollment *domain.Enrollment) error {
+	_, err := p.db.ExecContext(ctx,
+		"INSERT INTO enrollments (test_id, student_id) VALUES ($1, $2)",
+		enrollment.TestId, enrollment.StudentId)
+
+	return err
+}
+
+func (p *PostgresStudentRepository) GetStudentsPerTest(ctx context.Context, testId string) ([]*domain.Student, error) {
+	rows, err := p.db.QueryContext(ctx,
+		"SELECT id, name, age FROM students WHERE id IN (SELECT student_id FROM enrollments WHERE test_id = $1)",
+		testId)
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}()
+	if err != nil {
+		return nil, err
+	}
+	var students []*domain.Student
+	for rows.Next() {
+		var student = domain.Student{}
+		if err = rows.Scan(&student.Id, &student.Name, &student.Age); err == nil {
+			students = append(students, &student)
+		}
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return students, nil
+}

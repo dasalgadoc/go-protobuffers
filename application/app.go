@@ -38,7 +38,9 @@ func BuildApplication() *Application {
 	return &Application{
 		Configuration: appConfig,
 		StudentServer: NewStudentServer(repositories.studentRepository),
-		TestServer:    NewTestServer(repositories.testRepository, repositories.questionRepository),
+		TestServer: NewTestServer(repositories.testRepository,
+			repositories.questionRepository,
+			repositories.studentRepository),
 	}
 }
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package student;
 
-option go_package = "dasalgadoc.com/go-gprc;studentpb";
+option go_package = "dasalgadoc.com/go-gprc/studentpb";
 
 // Structure message interchange
 message Student {
