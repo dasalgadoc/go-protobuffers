@@ -52,6 +52,7 @@ func getConfiguration() (domain.Config, error) {
 	config := domain.Config{
 		Database: os.Getenv("DATABASE_URL"),
 		Port:     os.Getenv("PORT"),
+		Host:     os.Getenv("HOST"),
 		Network:  os.Getenv("NETWORK"),
 	}
 	if err = config.ConfigErrors(); err != nil {
