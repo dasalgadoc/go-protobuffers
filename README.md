@@ -1,8 +1,46 @@
-# go-protobuffers
-Example project to explore Protocol buffers in go
+<h1 align="center">
+  🚀 🐹 Go ProtoBuffers & gRPC example 
+</h1>
 
+<p align="center">
+    <a href="#"><img src="https://img.shields.io/badge/technology-go-blue.svg" alt="Go"/></a>
+</p>
 
-## 👶🏻 Start with ProtoBuffers
+<p align="center">
+  This repository serves as an example of ProtoBuffers and gRPC. 
+  It was created to investigate some techniques using Go.
+</p>
+
+## 🧲 Environment Setup
+
+### 🛠️ Needed tools
+
+1. Go 1.20.2 or higher
+2. Docker and Docker compose (I use Docker version 23.01.1 and docker-compose v2.17.0)
+
+### 🏃🏻 Application execution
+
+1. Make sure to download all Needed tools
+2. Clone the repository
+```bash
+git clone https://github.com/dasalgadoc/go-protobuffers.git
+```
+3. Build up go project
+```bash
+go mod download
+go get .
+```
+4. The project uses Docker to manage a Postgres database and localhost to compile and run the Go source code.
+```bash
+docker-compose up --build 
+```
+5. Run the API
+```bash
+go run main.go
+```
+6. Now, you can consume the gRPC
+
+## 👶🏻 Notes: Start with ProtoBuffers
 
 1. [Install](https://grpc.io/docs/protoc-installation/) the Protobuffers compiler (protoc)
 2. Some plugins can facilitate Protobuffers and gRPC
